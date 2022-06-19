@@ -58,6 +58,21 @@
                     </ul>
                 </li>
 
+                <li class="sidebar-item  has-sub {{ (Request::is('resto-admin/food-order/*')) ? 'active' : ''}}">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Pesanan Masuk</span>
+                    </a>
+                    <ul class="submenu  {{ (Request::is('resto-admin/food-order/*')) ? 'active' : ''}} ">
+                        <li class="submenu-item  {{ (Request::is('/resto-admin/food-order/all')) ? 'active' : ''}}">
+                            <a href="{{url('/resto-admin/food-order/all')}}">Semua Pesanan</a>
+                        </li>
+                        <li class="submenu-item  {{ (Request::is('/resto-admin/food-order/unprocessed')) ? 'active' : ''}}">
+                            <a href="{{url('/resto-admin/food-order/unprocessed')}}">Belum Diproses</a>
+                        </li>
+                    </ul>
+                </li>
+
                 <li class="sidebar-title">Logout</li>
                 <li class="sidebar-item  ">
 

@@ -23,6 +23,7 @@ class CreateFoodInvoicesTable extends Migration
             $table->text("status")->nullable();
             $table->longText("metode_bayar")->nullable();
             $table->unsignedBigInteger('id_user')->nullable();
+            $table->unsignedBigInteger('id_resto')->nullable();
             $table->timestamps();
         });
     }

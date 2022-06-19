@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\RestoAdmin\CuisineController as RestoCuisineCC;
 use App\Http\Controllers\RestoAdmin\MenuController as RestoMenuCC;
+use App\Http\Controllers\RestoAdmin\FoodOrderController as RestoFoodOrderCC;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,18 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/staff', [App\Http\Controllers\HomeController::class, 'index']);
 
     Route::get('/resto-admin', [App\Http\Controllers\HomeController::class, 'resto_admin']);
+
+    Route::prefix('/resto-admin/food-order')->group(function () {
+        Route::post('save', [RestoFoodOrderCC::class, 'store']);
+        Route::get('cuisine', [FoodCartCacheController::class, '']);
+        Route::any('/all', [RestoFoodOrderCC::class, 'all']); //id = id_resto
+        Route::any('{id}/detail', [RestoFoodOrderCC::class, 'viewDetail']);
+        Route::any('user/{id}', [FoodCartCacheController::class, 'getByUser']);
+        Route::any('user/{idUser}/menu/{idMenu}', [FoodCartCacheController::class, 'checkIfAlreadyIn']);
+        Route::any('{id}/quantity', [FoodCartCacheController::class, 'changeQuantity']);
+        Route::post('{id}/update', [FoodCartCacheController::class, 'update']);
+        Route::any('{id}/delete', [FoodCartCacheController::class, 'destroy']);
+    });
 
 
     Route::prefix('outbond')->group(function () {

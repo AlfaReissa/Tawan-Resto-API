@@ -13,53 +13,55 @@ use Illuminate\Http\Request;
 class TawanInvoiceController extends Controller
 {
 
-    function user($id){
+    function user($id)
+    {
         return User::findOrFail($id);
     }
 
-    function getByUser($id){
+    function getByUser($id)
+    {
         $returnObject = new \stdClass();
 
-        $invoiceObj = FoodInvoice::where("id_user",'=',$id)->get();
+        $invoiceObj = FoodInvoice::where("id_user", '=', $id)->get();
         $returnObject->invoiceObject = $invoiceObj;
-
-
-
-
         return $invoiceObj;
     }
 
 
-    function store(Request $request){
+    function store(Request $request)
+    {
+        $j = 0;
+
         $invoiceObj = new FoodInvoice();
         $invoiceObj->address = $request->address;
         $invoiceObj->lat = $request->latitude;
         $invoiceObj->long = $request->longitude;
         $invoiceObj->id_user = $request->id_user;
+        $invoiceObj->id_resto = $request->id_resto;
         $invoiceObj->notes = $request->notes;
         $invoiceObj->status = "WAITING";
 
         $isError = false;
-        if($invoiceObj->save() && count($request->cart_ids)!=0){
+        $saveInvoice = $invoiceObj->save();
+        if ($saveInvoice && count($request->cart_ids) != 0) {
             foreach ($request->cart_ids as $cart_id) {
-                $orderItem = new OrderedItem();
                 $cartObject = FoodCartCacheMobile::findOrFail((int)$cart_id);
                 $orderItem = new OrderedItem();
                 $orderItem->order_snapshot = $cartObject;
-                $orderItem->id_invoice=$invoiceObj->id;
-                if($orderItem->save()){
-                    FoodCartCacheMobile::destroy($cart_id);
-                }else{
+                $orderItem->id_invoice = $invoiceObj->id;
+                if ($orderItem->save()) {
+                        FoodCartCacheMobile::destroy($cart_id);
+                } else {
                     $invoiceObj->delete();
-                    $isError=true;
+                    $isError = true;
                 }
             }
         }
 
-        if($isError){
+        if ($isError) {
             $invoiceObj->delete();
-            return RazkyFeb::general(400,"Gagal",0,0);
-        }else{
+            return RazkyFeb::general(400, "Gagal", 0, 0);
+        } else {
             return RazkyFeb::responseSuccessWithData(
                 200,
                 1,
@@ -69,10 +71,5 @@ class TawanInvoiceController extends Controller
                 $invoiceObj,
             );
         }
-
-
-
-
-
     }
 }

@@ -12,6 +12,7 @@ class FoodInvoice extends Model
 
     protected $appends = [
         "ordered_item",
+        "user",
         "total_price",
         "total_price_rupiah_format",
         "ordered_item_names"
@@ -36,6 +37,11 @@ class FoodInvoice extends Model
     {
         $orderedItemsRaw = OrderedItem::where('id_invoice', '=', $this->id)->get();
         return $orderedItemsRaw;
+    }
+
+    function getUserAttribute()
+    {
+        return User::find($this->id_user);
     }
 
     function getTotalPriceAttribute()
